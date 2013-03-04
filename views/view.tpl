@@ -10,7 +10,7 @@ Reviews so far:
     &nbsp; &nbsp; Overall: {{item['restaurant_rating_reason']}} ({{item['restaurant_rating']}}
     of 5) 
   <br>
-  review by <i>{{item['user']}}</i> on <i>{{item['time']}}</i>
+  <i>review by {{item['user']}} on {{item['time']}}</i>
   <br>
   <br>
   %end
