@@ -39,16 +39,20 @@ def add_review_to_db():
   add_var = dict(user=user)
   for item in bottle.request.forms.items():
     print item
-    if item[0] == "restaurant_name" and item[1] == "":
-      add_var['error'] = "Error: Please enter restaurant name, silly!"
-      return bottle.template('add_review', add_var=add_var)
+    add_var[item[0]] = item[1]
 
     if item[0] == "user" and item[1] == "":
-      item[1] = "unnamed user"
+      restaurant_review_entry[item[0]] = "unnamed user"
 
     if item[0] != 'submit' and item[1] != "":
       restaurant_review_entry[item[0]] = item[1]
   restaurant_review_entry['time'] = time.strftime("%a, %b %d %Y %I:%M%p", time.localtime())
+
+  #before adding to db, see if there's a restaurant name, otherwise send back with fields entered
+  if 'restaurant_name' not in restaurant_review_entry:
+    add_var['error'] = "Error: Please enter restaurant name, silly!"
+    print add_var['restaurant_address']
+    return bottle.template('add_review', add_var=add_var)
 
   try:
     db.reviews.insert(restaurant_review_entry)

@@ -5,7 +5,7 @@
 %end
 <form action="add_review" method="POST">
 Please type a name for your review to be filed under:
-  <input type="text" name="user">
+  <input type="text" name="user" value="{{add_var['user']}}">
   <br>
   <br>
 
@@ -13,21 +13,21 @@ Please type a name for your review to be filed under:
   <br>
 
   Restaurant Name:
-  <input type="text" name="restaurant_name">
+  <input type="text" name="restaurant_name" value="{{add_var['restaurant_name']}}">
   at
-  <input type="text" placeholder="(address)" name="restaurant_address">
+  <input type="text" placeholder="(address)" name="restaurant_address" value="{{add_var['restaurant_address']}}">
   <br>
 
   Whadja get?
-  <input type="text" name="restaurant_item" placeholder="food item(s)">
+  <input type="text" name="restaurant_item" placeholder="food item(s)" value="{{add_var['restaurant_item']}}">
   <br>
 
   Didja like it?
-  <input type="text" name="item_comments">
+  <input type="text" name="item_comments" value="{{add_var['item_comments']}}">
   <br>
 
   How much was it? $
-  <input type="text" name="item_price">
+  <input type="text" name="item_price" value="{{add_var['item_price']}}">
   <br>
   <br>
 
@@ -35,7 +35,7 @@ Please type a name for your review to be filed under:
   <br>
   Overall Rating (1=meh, 5=omg yes):
   <select name="restaurant_rating">
-    <option></option>
+    <option> {{add_var['restaurant_rating']}} </option>
     <option> 1 </option>
     <option> 2 </option>
     <option> 3 </option>
@@ -45,10 +45,13 @@ Please type a name for your review to be filed under:
   <br>
 
   Why?
-  <input type="text" name="restaurant_rating_reason">
+  <input type="text" name="restaurant_rating_reason" value="{{add_var['restaurant_rating_reason']}}">
   <br>
-
-  <input type="checkbox" name="is_recommended">
+  %if 'is_recommended' in add_var:
+    <input type="checkbox" name="is_recommended" checked>
+  %else:
+    <input type="checkbox" name="is_recommended">
+  %end
   I recommend this place
   <br>
   <br>
