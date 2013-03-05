@@ -1,3 +1,8 @@
+%if 'error' in add_var:
+<b>{{add_var['error']}} </b>
+  <br>
+  <br>
+%end
 <form action="add_review" method="POST">
 Please type a name for your review to be filed under:
   <input type="text" name="user">
@@ -10,11 +15,11 @@ Please type a name for your review to be filed under:
   Restaurant Name:
   <input type="text" name="restaurant_name">
   at
-  <input type="text" value="(address)" name="restaurant_address">
+  <input type="text" placeholder="(address)" name="restaurant_address">
   <br>
 
   Whadja get?
-  <input type="text" name="restaurant_item" value="food item(s)">
+  <input type="text" name="restaurant_item" placeholder="food item(s)">
   <br>
 
   Didja like it?
@@ -48,7 +53,7 @@ Please type a name for your review to be filed under:
   <br>
   <br>
 
-  <input type="submit" name="submit" value="add review!">
+  <input type="submit" value="add review!">
 
 </form>
 
