@@ -52,6 +52,8 @@ class Review(object):
     if rating_exists:
       template += "{{item['restaurant_rating']}} of 5"
 
+    if 'is_recommended' in self.data:
+      template += "<br> &nbsp; &nbsp; I recommend this place!"
     #Each review always has a reviewer and time
     template += '''<br>
       <i>review by {{item['user']}} on {{item['time']}}</i>
