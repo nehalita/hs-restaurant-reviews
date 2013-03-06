@@ -18,25 +18,25 @@ else:
 def reroute_to_main_page():
   return bottle.redirect('/main')
 
-user = "Reptaur"
+username = "Reptaur"
 stats = ["RECENT: Someone just wrote about Romy's Cajun Rice!", "POPULAR: People seem to go to Chipotle a lot...", "ACCLAIMED: People looooove 'Snice!"]
 location = "Hacker School HQ"
 
 @bottle.route('/main')
 def post_main_page():
-  main_var = dict(user = user, stat_rows = stats, location = location)
+  main_var = dict(user = username, stat_rows = stats, location = location)
   return bottle.template('main', main_var = main_var)
 
 @bottle.route('/add_review', method="GET")
 def add_restaurant_review():
-  add_var = dict(user=user)
+  add_var = dict(user="", restaurant_name="", restaurant_address="", restaurant_item="", item_comments="", item_price="", restaurant_ranking="", restaurant_rating="", restaurant_rating_reason="")
   return bottle.template('add_review', add_var=add_var)
 
 @bottle.route('/add_review', method="POST")
 def add_review_to_db():
+  add_var={}
   restaurant_review_entry = {}
 
-  add_var = dict(user=user)
   for item in bottle.request.forms.items():
     print item
     add_var[item[0]] = item[1]
