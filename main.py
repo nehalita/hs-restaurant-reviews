@@ -6,6 +6,7 @@ import review as r
 from urlparse import urlparse
 
 MONGO_URL = os.environ.get('MONGOHQ_URL')
+print os.environ.get('MONGOHQ_URL')
 
 if MONGO_URL:
   connection = pymongo.Connection(MONGO_URL, safe=True)
