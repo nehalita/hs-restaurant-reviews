@@ -21,22 +21,11 @@ class Review(object):
 
     #text regarding the name of what you ate
     if item_exists:
-      template += "<br> &nbsp; &nbsp; The {{item['restaurant_item']}} was/were "
-    elif item_has_comments or item_has_price:
-      template += "<br> &nbsp; &nbsp; The item was "
-
-    #text regarding how you felt about what you ate
-    if item_has_comments:
-      template += "{{item['item_comments']}}"
-    elif item_exists:
-      template += "eaten"
-
-    #text regarding the price of what you ate
-    if (item_exists or item_has_comments) and item_has_price:
-      template += ", "
-
-    if item_has_price:
-      template+= "${{item['item_price']}}"
+      template += "<br> &nbsp; &nbsp; I had the {{item['restaurant_item']}}"
+      if item_has_price:
+        template += " for ${{item['item_price']}}"
+      if item_has_comments:
+        template += " and {{item['item_comments']}}"
 
     ###ITEM OVERALL FORMATTING###
     comment_exists = 'restaurant_rating_reason' in self.data

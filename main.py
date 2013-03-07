@@ -39,6 +39,7 @@ def add_review_to_db():
   restaurant_review_entry = {}
 
   for item in bottle.request.forms.items():
+    #bottle.request.forms.items() returns a tuple, hence the ugly code before
     print item
     add_var[item[0]] = item[1]
 

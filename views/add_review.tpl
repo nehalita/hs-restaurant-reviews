@@ -4,12 +4,14 @@
   <br>
 %end
 <form action="add_review" method="POST">
-Please type a name for your review to be filed under:
+  <b> Who are you? </b>
+  <br>
+Type in a username:
   <input type="text" name="user" value="{{add_var['user']}}">
   <br>
   <br>
 
-<b>Whadja get? Tell me!</b>
+<b>Wheredja go? Tell me!</b>
   <br>
 
   Restaurant Name:
@@ -17,12 +19,14 @@ Please type a name for your review to be filed under:
   at
   <input type="text" placeholder="(address)" name="restaurant_address" value="{{add_var['restaurant_address']}}">
   <br>
-
+  <br>
+<b>Whadja get?</b>
+<br>
   Whadja get?
   <input type="text" name="restaurant_item" placeholder="food item(s)" value="{{add_var['restaurant_item']}}">
   <br>
 
-  Didja like it?
+  Howdja like it?
   <input type="text" name="item_comments" value="{{add_var['item_comments']}}">
   <br>
 
