@@ -3,6 +3,7 @@ import pymongo
 import bottle
 import time
 import review as r
+import bson
 from urlparse import urlparse
 
 MONGO_URL = os.environ.get('MONGOHQ_URL')
@@ -68,6 +69,26 @@ def view_current_views():
   #import pdb
   #pdb.set_trace()
   return bottle.template('view', reptaur_reviews = reptaur_reviews)
+
+@bottle.route('/restaurant/:restaurant_name')
+def view_restaurant_reviews(restaurant_name):
+  restaurant_reviews = [r.Review(review) for review in db.reviews.find({'restaurant_name': restaurant_name})]
+  return bottle.template('restaurant_view', restaurant_reviews = restaurant_reviews, restaurant_name = restaurant_name)
+
+@bottle.route('/users/:username')
+def view_users_reviews(username):
+  restaurant_reviews = [r.Review(review) for review in db.reviews.find({'user': username})]
+  return bottle.template('user_view', username = username, restaurant_reviews = restaurant_reviews)
+
+@bottle.route('/users/remove_post/:username', method='POST')
+def remove_review(username):
+  #import pdb
+  #pdb.set_trace()
+  id_to_remove = bottle.request.forms.get('review_to_remove')
+  object_id = bson.objectid.ObjectId(id_to_remove)
+  db.reviews.remove({'_id': object_id})
+  return bottle.redirect('/users/'+username)
+
 
 if __name__ == '__main__':
   if os.environ.get('ENVIRONMENT') == 'PRODUCTION':

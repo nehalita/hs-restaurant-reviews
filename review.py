@@ -7,7 +7,8 @@ class Review(object):
 
   def to_html(self):
     #Each review always has a restaurant name
-    template = "<b>{{item['restaurant_name']}}</b>"
+    template = ""
+    template = "<b><a href='/restaurant/{{item['restaurant_name']}}'>{{item['restaurant_name']}}</a></b>"
 
     #Add address if there is one
     if 'restaurant_address' in self.data:
@@ -56,6 +57,6 @@ class Review(object):
       template += "<br> &nbsp; &nbsp; I recommend this place!"
     #Each review always has a reviewer and time
     template += '''<br>
-      <i>review by {{item['user']}} on {{item['time']}}</i>
+      <i>review by <a href="/users/{{item['user']}}">{{item['user']}}</a> on {{item['time']}}</i>
       '''
     return SimpleTemplate(template).render(item = self.data)
