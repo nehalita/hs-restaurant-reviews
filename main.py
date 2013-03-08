@@ -56,6 +56,14 @@ def add_review_to_db():
     print add_var['restaurant_address']
     return bottle.template('add_review', add_var=add_var)
 
+  if 'preview_selected' in restaurant_review_entry:
+    entry_preview = r.Review(restaurant_review_entry).to_html()
+    add_var['preview_selected'] = entry_preview
+    print add_var
+    return bottle.template('add_review', add_var=add_var)
+
+
+
   try:
     db.reviews.insert(restaurant_review_entry)
   except:

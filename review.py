@@ -35,6 +35,8 @@ class Review(object):
       template += "<br> &nbsp; &nbsp; Overall: "
 
     if comment_exists:
+      print "apparently a comment exists"
+      print "" ==  self.data['restaurant_rating_reason']
       template += "{{item['restaurant_rating_reason']}}"
       if rating_exists:
         template += ", "

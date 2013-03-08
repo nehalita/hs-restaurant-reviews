@@ -59,7 +59,16 @@ Type in a username:
   I recommend this place
   <br>
   <br>
-
+  <button name="preview_selected" value="true">preview this entry</button>
+  <br>
+  %if 'preview_selected' in add_var and 'error' not in add_var:
+    <br>
+    Your review would look like:
+    <br>
+    {{!add_var['preview_selected']}}
+    <br>
+    <br>
+  %end
   <input type="submit" value="add review!">
 </form>
 
