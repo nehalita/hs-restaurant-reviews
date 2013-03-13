@@ -4,6 +4,8 @@ import bottle
 import time
 import review as r
 import bson
+import sign_up
+import manage_users
 from urlparse import urlparse
 
 MONGO_URL = os.environ.get('MONGOHQ_URL')
@@ -16,21 +18,22 @@ else:
   db = connection.hs_food
 
 @bottle.route('/')
-def reroute_to_main_page():
-  return bottle.redirect('/main')
+def reroute_to_login():
+  return bottle.redirect('/login')
 
-username = "Reptaur"
 stats = ["RECENT: Someone just wrote about Romy's Cajun Rice!", "POPULAR: People seem to go to Chipotle a lot...", "ACCLAIMED: People looooove 'Snice!"]
 location = "Hacker School HQ"
 
 @bottle.route('/main')
 def post_main_page():
+  username = sign_up.get_username()
   main_var = dict(user = username, stat_rows = stats, location = location)
   return bottle.template('main', main_var = main_var)
 
 @bottle.route('/add_review', method="GET")
 def add_restaurant_review():
-  add_var = dict(user="", restaurant_name="", restaurant_address="", restaurant_item="", item_comments="", item_price="", restaurant_ranking="", restaurant_rating="", restaurant_rating_reason="")
+  username = sign_up.get_username()
+  add_var = dict(user=username, restaurant_name="", restaurant_address="", restaurant_item="", item_comments="", item_price="", restaurant_ranking="", restaurant_rating="", restaurant_rating_reason="")
   return bottle.template('add_review', add_var=add_var)
 
 @bottle.route('/add_review', method="POST")
@@ -38,16 +41,16 @@ def add_review_to_db():
   add_var={}
   restaurant_review_entry = {}
 
-  for item in bottle.request.forms.items():
+  for key, value in bottle.request.forms.items():
     #bottle.request.forms.items() returns a tuple, hence the ugly code before
-    print item
-    add_var[item[0]] = item[1]
+    print "%s: %s" % (key, value)
+    add_var[key] = value
 
-    if item[0] == "user" and item[1] == "":
-      restaurant_review_entry[item[0]] = "unnamed user"
+    if key == "user" and value == "":
+      restaurant_review_entry[key] = "unnamed user"
 
-    if item[0] != 'submit' and item[1] != "":
-      restaurant_review_entry[item[0]] = item[1]
+    if key != 'submit' and value != "":
+      restaurant_review_entry[key] = value
   restaurant_review_entry['time'] = time.strftime("%a, %b %d %Y %I:%M%p", time.localtime())
 
   #before adding to db, see if there's a restaurant name, otherwise send back with fields entered
@@ -82,6 +85,7 @@ def view_current_views():
 @bottle.route('/restaurant/:restaurant_name')
 def view_restaurant_reviews(restaurant_name):
   restaurant_reviews = [r.Review(review) for review in db.reviews.find({'restaurant_name': restaurant_name})]
+  #4sq_api_query_link = "https://api.foursquare.com/v2/venues/search?v=20130311&client_id=JSM3WVVM1OTXSHTUALUK1VADIKD5TGS3IQT2H5CX40TC4M1V&client_secret=KZ1Q4UGUJZD21TLPMK3SJY1YBUCBHGQN2X5MLRKVXYV5YVVA&query=%s&intent=browse&ll=40.726576,-74.000645&radius=400" % (restaurant_name)
   return bottle.template('restaurant_view', restaurant_reviews = restaurant_reviews, restaurant_name = restaurant_name)
 
 @bottle.route('/users/:username')
