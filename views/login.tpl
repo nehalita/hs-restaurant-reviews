@@ -1,13 +1,19 @@
 <p> Please sign in below with your Hackerschool Credentials: </p>
+
+<br>
+<br>
+{{user_error}}
+<br>
+<br>
+
 <form action="/login" method="POST">
   <table>
     <tr>
       <td>Email: </td>
       <td> <input type="text" size="30" maxlength="50" name="email"> </td>
-      <td>{{user_error}}
       <td>
         % if user_error != "":
-        <a href="/signup">Sign up for that email here!</a> </td>
+        <a href="/signup">Sign up for a new account here!</a> </td>
         %end
     </tr>
     <tr>

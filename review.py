@@ -49,3 +49,9 @@ class Review(object):
       <i>review by <a href="/users/{{item['user']}}">{{item['user']}}</a> on {{item['time']}}</i>
       '''
     return SimpleTemplate(template).render(item = self.data)
+
+def get_all_reviews(db):
+  return [Review(data) for data in db.reviews.find()]
+
+def get_reviews_by(db, attribute, value):
+  return [Review(data) for data in db.reviews.find({attribute: value})]

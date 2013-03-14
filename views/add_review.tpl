@@ -72,3 +72,5 @@ Type in a username:
   <input type="submit" value="add review!">
 </form>
 
+<br>
+<a href="/main">Go back to the main page</a>

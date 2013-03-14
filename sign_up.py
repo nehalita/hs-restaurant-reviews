@@ -14,12 +14,15 @@ if MONGO_URL:
   db = connection[urlparse(MONGO_URL).path[1:]]
 else:
   connection = pymongo.Connection('localhost', safe=True)
-  db = connection.todolist
+  db = connection.hs_food
 
 @bottle.route('/')
 def default_login():
-  #eventually ask if there's a cookie so i can redirect to a logged in page
-  return bottle.redirect('/login')
+  username = get_username()
+  if username:
+    return bottle.redirect('/main')
+  else:
+    return bottle.redirect('/login')
 
 @bottle.route('/login', method='GET')
 def get_login_info():
@@ -72,11 +75,20 @@ def logout_user():
   else:
     bottle.redirect('/login', dict(user_error = "", pw_error = ""))
 
-def get_username():
+def get_email():
   session = get_session()
-  email = session['email']
-  user_info = manage_users.get_info_from_db(email)
-  return user_info['username']
+  if session:
+    return session['email']
+  else:
+    return None
+
+def get_username():
+  email = get_email()
+  if email:
+    user_info = manage_users.get_info_from_db(email)
+    return user_info['username']
+  else:
+    return None
 
 '''
 #Not allowing signups for now, will modify code later when I'm ready

@@ -8,5 +8,9 @@ Hello, {{username}}, here are your reviews so far!!!
     <button name="review_to_remove" value="{{review.data['_id']}}">Remove this review above</button>
   </form>
   <br>
-
 %end
+<br>
+<a href='/view'>Go back to restaurant reviews</a>
+<br>
+<br>
+<a href='/main'>Go to main page</a>

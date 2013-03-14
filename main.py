@@ -33,8 +33,11 @@ def post_main_page():
 @bottle.route('/add_review', method="GET")
 def add_restaurant_review():
   username = sign_up.get_username()
-  add_var = dict(user=username, restaurant_name="", restaurant_address="", restaurant_item="", item_comments="", item_price="", restaurant_ranking="", restaurant_rating="", restaurant_rating_reason="")
-  return bottle.template('add_review', add_var=add_var)
+  if username:
+    add_var = dict(user=username, restaurant_name="", restaurant_address="", restaurant_item="", item_comments="", item_price="", restaurant_ranking="", restaurant_rating="", restaurant_rating_reason="")
+    return bottle.template('add_review', add_var=add_var)
+  else:
+    return bottle.template('login', dict(user_error="Sorry, you need to be logged in to submit a review, please log below:", pw_error=""))
 
 @bottle.route('/add_review', method="POST")
 def add_review_to_db():
@@ -42,7 +45,6 @@ def add_review_to_db():
   restaurant_review_entry = {}
 
   for key, value in bottle.request.forms.items():
-    #bottle.request.forms.items() returns a tuple, hence the ugly code before
     print "%s: %s" % (key, value)
     add_var[key] = value
 
@@ -65,7 +67,8 @@ def add_review_to_db():
     print add_var
     return bottle.template('add_review', add_var=add_var)
 
-
+  #we're ready to add entry to db
+  restaurant_review_entry['user_id'] = sign_up.get_email()
 
   try:
     db.reviews.insert(restaurant_review_entry)
@@ -77,16 +80,23 @@ def add_review_to_db():
 
 @bottle.route('/view')
 def view_current_views():
-  reptaur_reviews = [r.Review(data) for data in db.reviews.find()]
+  reviews = r.get_all_reviews(db)
   #import pdb
   #pdb.set_trace()
-  return bottle.template('view', reptaur_reviews = reptaur_reviews)
+  return bottle.template('view', reviews = reviews)
 
 @bottle.route('/restaurant/:restaurant_name')
 def view_restaurant_reviews(restaurant_name):
   restaurant_reviews = [r.Review(review) for review in db.reviews.find({'restaurant_name': restaurant_name})]
+  restaurant_reviews = r.get_reviews_by(db, 'restaurant_name', restaurant_name)
   #4sq_api_query_link = "https://api.foursquare.com/v2/venues/search?v=20130311&client_id=JSM3WVVM1OTXSHTUALUK1VADIKD5TGS3IQT2H5CX40TC4M1V&client_secret=KZ1Q4UGUJZD21TLPMK3SJY1YBUCBHGQN2X5MLRKVXYV5YVVA&query=%s&intent=browse&ll=40.726576,-74.000645&radius=400" % (restaurant_name)
   return bottle.template('restaurant_view', restaurant_reviews = restaurant_reviews, restaurant_name = restaurant_name)
+
+@bottle.route('/settings')
+def show_users_settings():
+  email = sign_up.get_email()
+  restaurant_reviews = r.get_reviews_by(db, 'user_id', email)
+  return "working on it"
 
 @bottle.route('/users/:username')
 def view_users_reviews(username):

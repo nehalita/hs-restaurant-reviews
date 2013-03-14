@@ -11,3 +11,9 @@ You're looking at the restaurants visited by <b>{{main_var['location']}}</b>!
 <a href="/add_review">Add a restuarant review :D</a>
 <br>
 <a href="/view">Browse the restaurants your HSers have gone to</a>
+<br>
+<br>
+<a href="/settings">My Settings Page</a>
+<br>
+<br>
+<a href="/logout">Logout</a>
