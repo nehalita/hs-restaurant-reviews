@@ -1,9 +1,7 @@
 <p> Please sign in below with your Hackerschool Credentials: </p>
 
 <br>
-<br>
 {{user_error}}
-<br>
 <br>
 
 <form action="/login" method="POST">

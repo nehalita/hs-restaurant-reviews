@@ -15,7 +15,7 @@ if MONGO_URL:
   db = connection[urlparse(MONGO_URL).path[1:]]
 else:
   connection = pymongo.Connection('localhost', safe=True)
-  db = connection.todolist
+  db = connection.hs_food
 
 def add_user(email, username):
   try:
@@ -80,6 +80,14 @@ def get_info_from_db(email):
   except:
     print "Need to create a new acct"
     return None
+
+def change_username(user_id, new_username):
+  user_id = str(user_id)
+  try:
+    db.users.update({'_id': user_id}, {'$set': {'username': new_username}})
+  except:
+    print user_id, new_username
+    print "Couldn't change the username"
 
 '''
 #I should only need this if I'm creating accts

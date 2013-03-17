@@ -96,14 +96,22 @@ def view_restaurant_reviews(restaurant_name):
 def show_users_settings():
   email = sign_up.get_email()
   restaurant_reviews = r.get_reviews_by(db, 'user_id', email)
-  return "working on it"
+  username = sign_up.get_username()
+  return bottle.template('settings', restaurant_reviews = restaurant_reviews, username = username, user_id = email)
+
+@bottle.route('/change_username', method="POST")
+def change_users_username():
+  username_to_change = bottle.request.forms.get('username')
+  user_id = bottle.request.forms.get('user_id')
+  manage_users.change_username(user_id, username_to_change)
+  return bottle.redirect('/settings')
 
 @bottle.route('/users/:username')
 def view_users_reviews(username):
-  restaurant_reviews = [r.Review(review) for review in db.reviews.find({'user': username})]
+  restaurant_reviews = r.get_reviews_by(db, 'user', username)
   return bottle.template('user_view', username = username, restaurant_reviews = restaurant_reviews)
 
-@bottle.route('/users/remove_post/:username', method='POST')
+@bottle.route('/users/modify_post/:username', method='POST')
 def remove_review(username):
   #import pdb
   #pdb.set_trace()
