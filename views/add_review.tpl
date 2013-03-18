@@ -15,9 +15,8 @@ Type in a username:
   <br>
 
   Restaurant Name:
-  <input type="text" name="restaurant_name" value="{{add_var['restaurant_name']}}">
-  at
-  <input type="text" placeholder="(address)" name="restaurant_address" value="{{add_var['restaurant_address']}}">
+  <input type="text" id="restaurant_name" name="restaurant_name" value="{{add_var['restaurant_name']}}">
+  <button type="button" id="address">Find Addresses</button>
   <br>
   <br>
 <b>Whadja get?</b>
@@ -74,3 +73,7 @@ Type in a username:
 
 <br>
 <a href="/main">Go back to the main page</a>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="/static/restaurant_finder.js"></script>
+

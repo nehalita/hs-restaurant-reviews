@@ -11,8 +11,8 @@ class Review(object):
     template = "<b><a href='/restaurant/{{item['restaurant_name']}}'>{{item['restaurant_name']}}</a></b>"
 
     #Add address if there is one
-    if 'restaurant_address' in self.data:
-      template += " at <b>{{item['restaurant_address']}}</b>"
+    if 'address' in self.data:
+      template += " at <b>{{item['address']}}</b>"
 
     ###ITEM TEXT FORMATTING###
     item_exists = 'restaurant_item' in self.data

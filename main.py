@@ -123,6 +123,10 @@ def remove_review(user_id):
     return bottle.redirect('/users/'+user_id)
 
 
+@bottle.route('/static/<filename>')
+def server_static(filename):
+    return bottle.static_file(filename, root='/static')
+
 if __name__ == '__main__':
   if os.environ.get('ENVIRONMENT') == 'PRODUCTION':
     port = int(os.environ.get('PORT', 5000))
