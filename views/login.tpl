@@ -1,8 +1,11 @@
-<p> Please sign in below with your Hackerschool Credentials: </p>
+<p> Please sign in below with your Hackerschool Credentials or with your login/pw for this site: </p>
 
 <br>
-{{user_error}}
-<br>
+%if user_error:
+  <br>
+  {{user_error}}
+  <br>
+%end
 
 <form action="/login" method="POST">
   <table>

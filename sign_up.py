@@ -32,12 +32,12 @@ def get_login_info():
 def log_user_in():
   email = bottle.request.forms.get('email')
   password = bottle.request.forms.get('password')
-
+  #check to see what is returned if user is not a hs-er
   hs_user_info = hs_auth.authenticate_with_hs(email, password)
+
   if hs_user_info:
     print hs_user_info
     user_info = manage_users.get_info_from_db(email)
-
     if not user_info:
       #user is a hackerschooler but isn't in my db so add them to db
       username = "%s %s" % (hs_user_info['first_name'], hs_user_info['last_name'])
@@ -107,7 +107,7 @@ def store_user_and_pw():
     if user_error_check == None:
       entry = db.users.find_one({"_id": email})
       hashed_pw = entry["password"]
-      #Houston we are a go, the pws match and the user is not in the system
+      #Houston we are a go, the pws match and the user is not in the system, this is so awesome that I can now type lines as long as I want to. Hahahahahahahahahha
 
       #THIS IS WHERE THE MAGIC HAPPENS
       session_id = manage_users.start_session(email)

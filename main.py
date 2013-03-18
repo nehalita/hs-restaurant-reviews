@@ -80,45 +80,47 @@ def add_review_to_db():
 
 @bottle.route('/view')
 def view_current_views():
-  reviews = r.get_all_reviews(db)
-  #import pdb
-  #pdb.set_trace()
-  return bottle.template('view', reviews = reviews)
+    reviews = r.get_all_reviews(db)
+    return bottle.template('view', reviews = reviews)
 
 @bottle.route('/restaurant/:restaurant_name')
 def view_restaurant_reviews(restaurant_name):
-  restaurant_reviews = [r.Review(review) for review in db.reviews.find({'restaurant_name': restaurant_name})]
-  restaurant_reviews = r.get_reviews_by(db, 'restaurant_name', restaurant_name)
-  #4sq_api_query_link = "https://api.foursquare.com/v2/venues/search?v=20130311&client_id=JSM3WVVM1OTXSHTUALUK1VADIKD5TGS3IQT2H5CX40TC4M1V&client_secret=KZ1Q4UGUJZD21TLPMK3SJY1YBUCBHGQN2X5MLRKVXYV5YVVA&query=%s&intent=browse&ll=40.726576,-74.000645&radius=400" % (restaurant_name)
-  return bottle.template('restaurant_view', restaurant_reviews = restaurant_reviews, restaurant_name = restaurant_name)
+    restaurant_reviews = r.get_reviews_by(db, 'restaurant_name', restaurant_name)
+    #4sq_api_query_link = "https://api.foursquare.com/v2/venues/search?v=20130311&client_id=JSM3WVVM1OTXSHTUALUK1VADIKD5TGS3IQT2H5CX40TC4M1V&client_secret=KZ1Q4UGUJZD21TLPMK3SJY1YBUCBHGQN2X5MLRKVXYV5YVVA&query=%s&intent=browse&ll=40.726576,-74.000645&radius=400" % (restaurant_name)
+    return bottle.template('restaurant_view', restaurant_reviews = restaurant_reviews, restaurant_name = restaurant_name)
 
 @bottle.route('/settings')
 def show_users_settings():
-  email = sign_up.get_email()
-  restaurant_reviews = r.get_reviews_by(db, 'user_id', email)
-  username = sign_up.get_username()
-  return bottle.template('settings', restaurant_reviews = restaurant_reviews, username = username, user_id = email)
+    email = sign_up.get_email()
+    restaurant_reviews = r.get_reviews_by(db, 'user_id', email)
+    username = sign_up.get_username()
+    return bottle.template('settings', restaurant_reviews = restaurant_reviews, username = username, user_id = email)
 
 @bottle.route('/change_username', method="POST")
 def change_users_username():
-  username_to_change = bottle.request.forms.get('username')
-  user_id = bottle.request.forms.get('user_id')
-  manage_users.change_username(user_id, username_to_change)
-  return bottle.redirect('/settings')
+    username_to_change = bottle.request.forms.get('username')
+    user_id = bottle.request.forms.get('user_id')
+    manage_users.change_username(user_id, username_to_change)
+    return bottle.redirect('/settings')
 
 @bottle.route('/users/:username')
-def view_users_reviews(username):
-  restaurant_reviews = r.get_reviews_by(db, 'user', username)
-  return bottle.template('user_view', username = username, restaurant_reviews = restaurant_reviews)
+def direct_to_user_id(username):
+    restaurant_review_by_username = r.get_reviews_by(db, 'user', username)
+    one_review = restaurant_review_by_username[0]
+    user_id = one_review.data['user_id']
+    return bottle.redirect('/user_id/'+user_id)
 
-@bottle.route('/users/modify_post/:username', method='POST')
-def remove_review(username):
-  #import pdb
-  #pdb.set_trace()
-  id_to_remove = bottle.request.forms.get('review_to_remove')
-  object_id = bson.objectid.ObjectId(id_to_remove)
-  db.reviews.remove({'_id': object_id})
-  return bottle.redirect('/users/'+username)
+@bottle.route('/user_id/:user_id')
+def view_users_reviews(user_id):
+    restaurant_reviews = r.get_reviews_by(db, 'user_id', user_id)
+    return bottle.template('user_view', user_id = user_id, restaurant_reviews = restaurant_reviews)
+
+@bottle.route('/user_id/modify_post/:user_id', method='POST')
+def remove_review(user_id):
+    id_to_remove = bottle.request.forms.get('review_to_remove')
+    object_id = bson.objectid.ObjectId(id_to_remove)
+    db.reviews.remove({'_id': object_id})
+    return bottle.redirect('/users/'+user_id)
 
 
 if __name__ == '__main__':
