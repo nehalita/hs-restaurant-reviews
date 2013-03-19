@@ -4,10 +4,9 @@
   <br>
 %end
 <form action="add_review" method="POST">
-  <b> Who are you? </b>
+    <b> Username for your entry <a href="/settings"> change your username here</a></b>
   <br>
-Type in a username:
-  <input type="text" name="user" value="{{add_var['user']}}">
+  {{add_var['user']}}
   <br>
   <br>
 

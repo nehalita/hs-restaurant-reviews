@@ -44,12 +44,14 @@ def add_review_to_db():
   add_var={}
   restaurant_review_entry = {}
 
+  username = sign_up.get_username()
+
   for key, value in bottle.request.forms.items():
     print "%s: %s" % (key, value)
     add_var[key] = value
 
-    if key == "user" and value == "":
-      restaurant_review_entry[key] = "unnamed user"
+    restaurant_review_entry["user"] = username
+    add_var['user'] = username
 
     if key != 'submit' and value != "":
       restaurant_review_entry[key] = value
