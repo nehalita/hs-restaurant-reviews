@@ -14,8 +14,8 @@ Your reviews are:
 %for review in restaurant_reviews:
   {{!review.to_html()}}
   <br>
-  <form action="/users/modify_post/{{username}}" method="POST">
+  <form action="/user_id/modify_post/{{user_id}}" method="POST">
     <button name="review_to_remove" value="{{review.data['_id']}}">Remove this review</button>
-    <button name="review_to_edit" value="{{review.data['_id']}}">Edit this review</button>
+    <button name="review_to_edit" value="{{review.data['_id']}}">Edit this review (doesn't work yet)</button>
   </form>
 %end

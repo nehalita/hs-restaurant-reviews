@@ -120,9 +120,11 @@ def view_users_reviews(user_id):
 @bottle.route('/user_id/modify_post/:user_id', method='POST')
 def remove_review(user_id):
     id_to_remove = bottle.request.forms.get('review_to_remove')
-    object_id = bson.objectid.ObjectId(id_to_remove)
-    db.reviews.remove({'_id': object_id})
-    return bottle.redirect('/users/'+user_id)
+    id_to_edit = bottle.request.forms.get('review_to_edit')
+    if id_to_remove:
+        object_id = bson.objectid.ObjectId(id_to_remove)
+        db.reviews.remove({'_id': object_id})
+    return bottle.redirect('/settings')
 
 
 @bottle.route('/static/:filename#.*#')
