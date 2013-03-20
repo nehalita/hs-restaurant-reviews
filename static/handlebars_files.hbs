@@ -1,0 +1,5 @@
+<div class="restaurant-list"><h3>Addresses</h3>
+  {{#each venues}}
+  <label><input type='radio' class='radio-button' name='address' data-address='{{location.address}} {{location.crossStreet}}' data-name='{{name}}'><b>{{name}}</b>: {{location.address}} {{location.crossStreet}}</input></label><br />
+  {{/each}}
+</div>
