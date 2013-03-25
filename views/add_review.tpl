@@ -17,6 +17,7 @@
   <input type="text" id="restaurant_name" name="restaurant_name" value="{{add_var['restaurant_name']}}">
   <button type="button" id="address">Find Addresses</button>
   <br>
+  <div id="restaurant-js"></div>
   <br>
 <b>Whadja get?</b>
 <br>
@@ -74,5 +75,6 @@
 <a href="/main">Go back to the main page</a>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="/static/handlebars.js"></script>
+<script src="/static/handlebars_files.js"></script>
 <script src="/static/restaurant_finder.js"></script>
-
