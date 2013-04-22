@@ -1,7 +1,7 @@
-%if username != 'Anonmyous User':
+%if username != 'Anonymous User':
     Hello! This is your setting's page. You can change your username, view your past posts, and edit them :).
 %else:
-    Hello! As an anonymous user, you cannot adjust your settings page but here is what you could do as a logged in user. 
+    Hello! As an anonymous user, you cannot adjust your settings but this page represents what you could do as a logged in user. 
 %end
 <br>
 <br>
@@ -25,7 +25,7 @@ Your reviews are:
       </form>
     %end
 %else:
-You have no reviews, feel free to <a href='/add_review'>add one</a><br>
+You have no reviews, if you are a validated user, feel free to <a href='/add_review'>add one</a><br>
 %end
 <br>
 <a href='/main'>Go back to the main page</a>

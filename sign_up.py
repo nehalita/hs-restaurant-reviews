@@ -19,7 +19,7 @@ else:
 @bottle.route('/')
 def default_login():
     """
-    Checks if user is still logged in and redirects to todo page; otherwise,
+    Checks if user is still logged in and redirects to main page; otherwise,
     Produces login page
     """
     session = get_session()
@@ -39,7 +39,7 @@ def get_login_info():
 def log_user_in():
     """
     Checks for Hacker School users and general users of the site.
-    If the email and password match the database, redirects to todo page
+    If the email and password match the database, redirects to main page
     If user is a new Hacker Schooler with correct login info,
     adds them to the database
     If password is incorrect, asks them to retry
@@ -64,7 +64,7 @@ def log_user_in():
         session_id = manage_users.start_session(email)
         cookie = manage_users.get_cookie(session_id)
         bottle.response.set_cookie("session", cookie)
-        bottle.redirect('/todo')
+        bottle.redirect('/main')
     else:
         if user_info:
             pw_error_msg = "Log in not successful; check your email/pw"
@@ -83,7 +83,7 @@ def get_user_and_pw():
 @bottle.route('/signup', method='POST')
 def store_user_and_pw():
     """
-    Adds user to database and redirects to todo page
+    Adds user to database and redirects to main page
     Reproduces page with appropriate error message if:
      - passwords don't match, or
      - user is already in database
@@ -101,7 +101,7 @@ def store_user_and_pw():
             session_id = manage_users.start_session(email)
             cookie = manage_users.get_cookie(session_id)
             bottle.response.set_cookie("session", cookie)
-            bottle.redirect('/todo')
+            bottle.redirect('/main')
         else:
             pw_error_message = "Your passwords do not match"
             return bottle.template('signup', dict(pw_error = None,
@@ -127,7 +127,7 @@ def create_anon_account():
     session_id = manage_users.start_session(email)
     cookie = manage_users.get_cookie(session_id)
     bottle.response.set_cookie("session", cookie)
-    bottle.redirect('/todo')
+    bottle.redirect('/main')
 
 @bottle.route('/logout', method='GET')
 def logout_user():
@@ -175,6 +175,8 @@ def get_username():
     """
     email = get_email()
     if email:
+        if email == 'anon':
+            return 'Anonymous User'
         user_info = manage_users.get_info_from_db(email)
         return user_info['username']
     else:

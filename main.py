@@ -22,18 +22,28 @@ LOCATION = "Hacker School HQ"
 
 @bottle.route('/main')
 def post_main_page():
+    """
+    Verifies user and posts main page for navigation
+    """
     username = sign_up.get_username()
-    main_var = dict(user = username, stat_rows = STATS, location = LOCATION)
-    return bottle.template('main', main_var = main_var)
+    if username:
+        main_var = dict(user = username, stat_rows = STATS, location = LOCATION)
+        return bottle.template('main', main_var = main_var)
+    else:
+        bottle.redirect('/login')
 
 @bottle.route('/add_review', method="GET")
 def add_restaurant_review():
+    """
+    Allows user to post a review and preview it for any user
+    """
     username = sign_up.get_username()
     if username:
         add_var = dict(user=username, restaurant_name="", restaurant_address="",
                 restaurant_item="", item_comments="", item_price="",
                 restaurant_ranking="", restaurant_rating="",
-                restaurant_rating_reason="")
+                restaurant_rating_reason="", address="", restaurant_chosen="",
+                address_chosen="")
         return bottle.template('add_review', add_var=add_var)
     else:
         return bottle.template('login',
@@ -58,25 +68,35 @@ def add_review_to_db():
     restaurant_review_entry['time'] = time.strftime("%a, %b %d %Y %I:%M%p",
             time.localtime())
 
+    #change restaurant name and address to javascript variables
+    add_var['restaurant_name'] = add_var['restaurant_chosen']
+    restaurant_review_entry['restaurant_name'] = add_var['restaurant_chosen']
+    add_var['address'] = add_var['address_chosen']
+    restaurant_review_entry['address'] = add_var['address_chosen']
+
+
     #see if there's a restaurant name, otherwise send back with fields entered
     if 'restaurant_name' not in restaurant_review_entry:
         add_var['error'] = "Error: Please enter restaurant name, silly!"
-        print add_var['restaurant_address']
+        #print add_var['restaurant_address']
         return bottle.template('add_review', add_var=add_var)
 
     if 'preview_selected' in restaurant_review_entry:
+        print restaurant_review_entry
         entry_preview = r.Review(restaurant_review_entry).to_html()
         add_var['preview_selected'] = entry_preview
-        print add_var
+        #print add_var
         return bottle.template('add_review', add_var=add_var)
 
     #we're ready to add entry to db
-    restaurant_review_entry['user_id'] = sign_up.get_email()
-
-    try:
-        db.reviews.insert(restaurant_review_entry)
-    except pymongo.errors.PyMongoError:
-        add_var['error'] = "Error: Couldn't add this to the db"
+    if username != "Anonymous User":
+        try:
+            db.reviews.insert(restaurant_review_entry)
+        except pymongo.errors.PyMongoError:
+            add_var['error'] = "Error: Couldn't add this to the db"
+            return bottle.template('add_review', add_var=add_var)
+    else:
+        add_var['error'] = "Sorry, you cannot add a review because you are not signed in as a user or because of a cookie error"
         return bottle.template('add_review', add_var=add_var)
 
     return bottle.redirect('view')
@@ -104,7 +124,8 @@ def show_users_settings():
 def change_users_username():
     username_to_change = bottle.request.forms.get('username')
     user_id = bottle.request.forms.get('user_id')
-    manage_users.change_username(user_id, username_to_change)
+    if user_id != "anon":
+        manage_users.change_username(user_id, username_to_change)
     return bottle.redirect('/settings')
 
 @bottle.route('/users/:username')

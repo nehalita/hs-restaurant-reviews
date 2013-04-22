@@ -15,7 +15,7 @@
 
   Restaurant Name:
   <input type="text" id="restaurant_name" name="restaurant_name" value="{{add_var['restaurant_name']}}">
-  <button type="button" id="address">Find Addresses</button>
+  <button type="button" id="address" name="address" value="{{add_var['address']}}">Find Addresses</button>
   <br>
   <div id="restaurant-js"></div>
   <br>
@@ -69,10 +69,13 @@
     <br>
   %end
   <input type="submit" value="add review!">
+  <input type="hidden" id="res" name="restaurant_chosen" value="{{add_var['restaurant_chosen']}}">
+  <input type="hidden" id="add" name="address_chosen" value="{{add_var['address_chosen']}}">
 </form>
 
 <br>
 <a href="/main">Go back to the main page</a>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="/static/handlebars.js"></script>
