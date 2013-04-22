@@ -3,6 +3,10 @@ import urllib2
 import json
 
 def get_restaurant_entries(restaurant):
+    """
+    Creates a query to Foursquare's API given Hacker School's lat/long coordinates.
+    Searched the restaurant name and returns all the restaurants and their addresses within an 800m radius
+    """
     url = "https://api.foursquare.com/v2/venues/search?"
     version = "v=" + time.strftime("%Y%m%d")
     API_KEY= "&client_id=JSM3WVVM1OTXSHTUALUK1VADIKD5TGS3IQT2H5CX40TC4M1V&client_secret=KZ1Q4UGUJZD21TLPMK3SJY1YBUCBHGQN2X5MLRKVXYV5YVVA"
@@ -34,5 +38,6 @@ def get_restaurant_entries(restaurant):
         closest_addresses.append(address + " " + btwn)
     return closest_addresses
 
-print get_restaurant_entries("chipotle")
+if __name__ == '__main___':
+    print get_restaurant_entries("chipotle")
 

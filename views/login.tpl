@@ -1,3 +1,5 @@
+<p> Welcome to the Restaurant Review Site! A site where you can create and compile restaurant reviews around a specific group. <br />
+    This site is created around Hacker School's restaurant experiences </p> 
 <p> Please sign in below with your Hackerschool Credentials or with your login/pw for this site: </p>
 
 <br>

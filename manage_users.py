@@ -5,109 +5,145 @@ import hmac
 import bson
 import os
 import pymongo
+import sys
 from urlparse import urlparse
 
-#### MANDATORY DB STUFF, NEED TO GET RID OF THIS
 MONGO_URL = os.environ.get('MONGOHQ_URL')
 
 if MONGO_URL:
-  connection = pymongo.Connection(MONGO_URL, safe=True)
-  db = connection[urlparse(MONGO_URL).path[1:]]
+    CONNECTION = pymongo.Connection(MONGO_URL, safe=True)
+    db = CONNECTION[urlparse(MONGO_URL).path[1:]]
 else:
-  connection = pymongo.Connection('localhost', safe=True)
-  db = connection.hs_food
-
-def add_user(email, username):
-  try:
-    users = db.users
-    users.insert({'_id': email, 'username': username})
-  except pymongo.errors.DuplicateKeyError as e:
-    return "You're already in the database" % (email)
-  except:
-    return "Pymongo error, retry"
-
-def start_session(email):
-  sessions = db.sessions
-  session = {"email": email}
-  try:
-    sessions.insert(session)
-  except:
-    print "Unexpected error on start_session:", sys.exc_info()[0]
-    return -1
-  return str(session['_id'])
-
-def hash_string(string_to_hash):
-  KEYWORD = "HASH ME"
-  return hmac.new(KEYWORD, string_to_hash).hexdigest()
-
-def get_cookie(session_id):
-  #hashes the session_id as the cookie
-  return "%s|%s" % (session_id, hash_string(session_id))
-
-def get_session_from_cookie(cookie):
-  session_id = cookie.split("|")[0]
-  if (get_cookie(session_id) == cookie):
-    return session_id
-  else:
-    print "You've got a rotten cookie, aka the cookie you put in doesn't match what I excpected"
-
-def get_session_from_db(session_id):
-  sessions = db.sessions
-  try:
-    object_id = bson.objectid.ObjectId(session_id)
-    session = sessions.find_one({'_id': object_id})
-    return session
-  except:
-    print "Had issues retrieving your session_id from the db"
-    return None
-
-def end_session(session_id):
-  sessions = db.sessions
-  try:
-    object_id = bson.objectid.ObjectId(session_id)
-    sessions.remove({'_id': object_id})
-    print "removed session"
-  except:
-    print "unable to remove session"
-  return
-
-def get_info_from_db(email):
-  #determines if email is in local database and returns all info if it is
-  users = db.users
-  try:
-    user_info = users.find_one({'_id': email})
-    return user_info
-  except:
-    print "Need to create a new acct"
-    return None
-
-def change_username(user_id, new_username):
-  user_id = str(user_id)
-  try:
-    db.users.update({'_id': user_id}, {'$set': {'username': new_username}})
-  except:
-    print user_id, new_username
-    print "Couldn't change the username"
-
-'''
-#I should only need this if I'm creating accts
-def email_matches_password(user_info, password):
-  pw = user_info['password']
-  past_salt = pw.split(",")[1]
-  return hash_pw(password, past_salt) == pw
-
-def check_if_pws_match(password, pwconf):
-  if password != pwconf:
-    return "Your passwords do not match"
+    CONNECTION = pymongo.Connection('localhost', safe=True)
+    db = CONNECTION.todolist
 
 def make_salt():
-  salt = ""
-  for i in range(5):
-    salt += random.choice(string.ascii_letters)
-  return salt
+    """
+    Creates a salt by selecting 5 random letters
+    """
+    salt = ""
+    for i in range(5):
+        salt += random.choice(string.ascii_letters)
+    return salt
 
 def hash_pw(password, salt=None):
-  if salt == None:
-    salt = make_salt()
-  return "%s,%s" % (hashlib.sha1(password+salt).hexdigest(), salt)
-  '''
+    """
+    Creates a salt and hashes password with salt
+    """
+    if salt == None:
+        salt = make_salt()
+    return "%s,%s" % (hashlib.sha1(password+salt).hexdigest(), salt)
+
+def add_user(email, username, password=None):
+    """
+    Adds or udpates a user in the database
+    """
+    try:
+        db.users.update({'_id': email}, {'$set':
+            {'username': username}}, upsert=True)
+        if password:
+            hashed_pw = hash_pw(password)
+            db.users.update({'_id': email}, {'$set':
+                {'password': hashed_pw}})
+    except pymongo.errors.DuplicateKeyError:
+        return "You're already in the database" % (email)
+    except:
+        return "Pymongo error, retry"
+
+def start_session(email):
+    """
+    Records the start of a session to keep track of user
+    """
+    sessions = db.sessions
+    session = {"email": email}
+    try:
+        sessions.insert(session)
+    except pymongo.errors.PyMongoError:
+        print "Unexpected error on start_session:", sys.exc_info()[0]
+        return -1
+    return str(session['_id'])
+
+def hash_string(string_to_hash):
+    """
+    Hash the string with a keyword
+    """
+    keyword = "HASH ME"
+    return hmac.new(keyword, string_to_hash).hexdigest()
+
+def get_cookie(session_id):
+    """
+    Hashes the session_id as the cookie
+    """
+    return "%s|%s" % (session_id, hash_string(session_id))
+
+def get_session_from_cookie(cookie):
+    """
+    Extracts session_id from cookie
+    """
+    session_id = cookie.split("|")[0]
+    if (get_cookie(session_id) == cookie):
+        return session_id
+    else:
+        print "Cookie doesn't match session cookie from db"
+        return None
+
+def get_session_from_db(session_id):
+    """
+    Retrieves session from db
+    """
+    sessions = db.sessions
+    try:
+        object_id = bson.objectid.ObjectId(session_id)
+        session = sessions.find_one({'_id': object_id})
+    except pymongo.errors.PyMongoError:
+        print "Had issues retrieving your session_id from the db"
+    return session
+
+def get_info_from_db(email):
+    """
+    Retrieves user info from db based on user_id/email
+    """
+    #determines if email is in local database
+    users = db.users
+    try:
+        user_info = users.find_one({'_id': email})
+        return user_info
+    except pymongo.errors.PyMongoError:
+        print "Need to create a new acct or Anon"
+        return None
+
+def email_matches_password(user_info, password):
+    """
+    Verifies if a username matches the password stored in the db
+    """
+    if user_info and 'password' in user_info:
+        db_password = user_info['password']
+        past_salt = db_password.split(",")[1]
+        return hash_pw(password, past_salt) == db_password
+    else:
+        return None
+
+def end_session(session_id):
+    """
+    Removes session from db
+    """
+    sessions = db.sessions
+    try:
+        object_id = bson.objectid.ObjectId(session_id)
+        sessions.remove({'_id': object_id})
+    except pymongo.errors.PyMongoError:
+        print "unable to remove session"
+    return
+
+def change_username(user_id, new_username):
+    """
+    Allows user to change their username stored in the db
+    """
+    user_id = str(user_id)
+    try:
+        db.users.update({'_id': user_id}, {'$set': {'username': new_username}})
+    except pymongo.errors.PyMongoError:
+        print user_id, new_username
+        print "Couldn't change the username"
+
+
