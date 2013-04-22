@@ -35,8 +35,9 @@ $(document).ready(function(){
         var nameAddress = getRestaurantNameAddress(event);
         var name = nameAddress['restaurantName']
             , address = nameAddress['address']; 
-        console.log(name);
-        console.log(address);
+        
+        $('#res').val(name);
+        $('#add').val(address);
     });
     
     function getRestaurantNameAddress(event){
