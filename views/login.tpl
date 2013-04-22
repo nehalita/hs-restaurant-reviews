@@ -15,17 +15,20 @@
       <td>Email: </td>
       <td> <input type="text" size="30" maxlength="50" name="email"> </td>
       <td>
-        % if user_error != "":
+        % if user_error:
         <a href="/signup">Sign up for a new account here!</a> </td>
         %end
     </tr>
     <tr>
       <td>Password: </td>
       <td> <input type="password" size="30" maxlength="50" name="password"> </td>
+      % if pw_error:
       <td> {{pw_error}} </td>
+      % end
     </tr>
   </table>
   <input type="submit" name="submit" value="submit">
 </form>
 
-<a href="/signup">If you're new, create an account here!</a>
+<a href="/signup">If you're new, create an account here!</a> <br>
+<a href="/anon">If you're just checking this out, view as anonymous here!</a>
