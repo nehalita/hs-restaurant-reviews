@@ -1,7 +1,7 @@
 hs-restaurant-reviews
 =====================
 
-This app is a restaurant review aggregator for people around a certain area -- stemming from my desire to be able to easily see my friend's restaurant reviews and the idea that people who know the reviewers can absorb the information better based on what they know about the reviewer. Would be great for a friend group or a work area. 
+This app is a restaurant review aggregator for people around a certain area, stemming from my desire to be able to easily see my friend's restaurant reviews and the idea that people who know the reviewers can absorb the information better based on what they know about the reviewer. Would be great for a friend group or a work area. 
 
 This was my third web app and my first app where I started to integrate users and display data that could be searchable by different metrics. I also integrated some javascript and jquery to pull restaurant names from the Foursquare API and am now using this values to keep restaurant reviews under the same name and address. 
 
@@ -42,4 +42,4 @@ Users can opt to log in as "anonymous" which lets you view the site but prevents
 
 ####Browse Reviews for a Specific Restaurant:
 
-![Browse Restaurant](https://github.com/nehalita/hs-restaurant-reviews/blob/master/screenshots/view-res-review.png?raw=true)
+![Browse Restaurant](https://github.com/nehalita/hs-restaurant-reviews/blob/master/screenshots/view-res-reviews.png?raw=true)
