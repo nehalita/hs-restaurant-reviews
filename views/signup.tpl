@@ -29,3 +29,6 @@
 </form>
 
 <a href="/login">If you already have an account, log in here!</a>
+<br>
+<br>
+<a href="https://github.com/nehalita/hs-restaurant-reviews">My Github Repo for this site</a>
